@@ -1209,11 +1209,14 @@ static void AudioFileStreamPacketsProc(void* clientData, UInt32 numberBytes, UIn
         if (!isPlayingSameItemProbablySeek)
         {
             [self setInternalState:STKAudioPlayerInternalStateWaitingForData];
-            
-            [self playbackThreadQueueMainThreadSyncBlock:^
-            {
-                [self.delegate audioPlayer:self didStartPlayingQueueItemId:playingQueueItemId];
-            }];
+            dispatch_async(dispatch_get_main_queue(), ^ {
+                               [self.delegate audioPlayer:self didStartPlayingQueueItemId:playingQueueItemId];
+            });
+//
+//            [self playbackThreadQueueMainThreadSyncBlock:^
+//            {
+//                [self.delegate audioPlayer:self didStartPlayingQueueItemId:playingQueueItemId];
+//            }];
         }
     }
     else
